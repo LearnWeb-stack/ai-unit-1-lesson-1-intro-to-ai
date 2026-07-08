@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -101,6 +102,7 @@
   .pill.ai{ background: var(--clay); }
   .pill.human{ background: var(--sage); }
   .pill.wisdom{ background: #2F5D8A; }
+  .pill.smart{ background: var(--automation); }
   .pill.automation{ background: var(--automation); }
 
   /* ---------- SCENARIO JUDGE ---------- */
@@ -115,7 +117,9 @@
   .sc-btn:disabled{ opacity:0.5; cursor:default; }
   .sc-reveal{ margin-top: 16px; padding: 16px 18px; border-radius: 10px; background: rgba(108,92,231,0.08); font-size: 0.95rem; display:none; }
   .sc-reveal.show{ display:block; }
-  .sc-reveal .your-pick{ font-weight:700; color: var(--teal); margin-bottom: 6px; }
+  .sc-reveal .your-pick{ font-weight:700; color: var(--teal); margin-bottom: 6px; display:flex; align-items:center; gap:8px; }
+  .sc-reveal.sc-correct{ background: rgba(12,133,119,0.12); }
+  .sc-reveal.sc-incorrect{ background: rgba(91,97,120,0.12); }
 
   /* ---------- WISDOM COMPASS ---------- */
   .compass-wrap{ display:grid; grid-template-columns: 1fr 300px; gap: 40px; align-items:center; margin-top: 30px; }
@@ -136,34 +140,6 @@
   .slider-group .hint{ font-size: 0.82rem; color: var(--ink-soft); font-weight:400; }
   .compass-chart{ display:flex; justify-content:center; }
   .compass-note{ text-align:center; font-size: 0.88rem; color: var(--ink-soft); margin-top: 14px; font-style: italic; }
-
-  /* ---------- DISCUSSION ---------- */
-  .discuss-list{ list-style:none; margin: 28px 0; padding: 0; counter-reset: dq; }
-  .discuss-list li{
-    counter-increment: dq; position:relative; padding: 18px 0 18px 46px; border-bottom: 1px solid var(--line);
-    font-size: 1.02rem;
-  }
-  .discuss-list li:last-child{ border-bottom:none; }
-  .discuss-list li::before{
-    content: counter(dq); position:absolute; left:0; top:18px; width:30px; height:30px; border-radius:50%;
-    background: var(--teal); color:#00D9C0; font-family:'Fraunces',serif; font-weight:700; font-size:0.95rem;
-    display:flex; align-items:center; justify-content:center;
-  }
-  .notes-box{ margin-top: 30px; }
-  .notes-box textarea{
-    width:100%; min-height: 130px; border-radius: 12px; border: 1.5px solid var(--teal-line);
-    padding: 16px 18px; font-family:'Inter',sans-serif; font-size: 0.96rem; color: var(--ink);
-    background: var(--card); resize: vertical;
-  }
-  .notes-box textarea:focus{ outline: 2px solid var(--gold); outline-offset: 2px; }
-  .copy-row{ display:flex; align-items:center; gap: 14px; margin-top: 12px; }
-  .copy-btn{
-    font-family:'Inter',sans-serif; font-weight:600; font-size:0.9rem; padding: 10px 20px; border-radius: 999px;
-    border: none; background: var(--teal); color:#F7F8FC; cursor:pointer;
-  }
-  .copy-btn:hover{ background: var(--bg-dark-2); }
-  .copied-msg{ font-size: 0.85rem; color: var(--sage); font-weight:600; opacity:0; transition: opacity 0.2s; }
-  .copied-msg.show{ opacity:1; }
 
   footer{ text-align:center; padding: 40px 28px 60px; color: var(--ink-soft); font-size: 0.85rem; }
 
@@ -231,6 +207,10 @@
   <div class="eyebrow">Part 3 &middot; Interactive</div>
   <h2>Smart, or Wise?</h2>
   <p>These five short scenarios all involve someone using their intelligence. Decide: are they being <em>smart</em>, or <em>wise</em>? Pick one, then see how we'd frame it.</p>
+  <div class="score-bar">
+    <span>Your judgments</span>
+    <span><strong id="scenarioScore">0 / 5</strong> matched our framing</span>
+  </div>
   <div id="scenarioList"></div>
 </section>
 
@@ -247,28 +227,6 @@
         <svg id="radarChart" width="280" height="280" viewBox="0 0 280 280"></svg>
       </div>
       <p class="compass-note">Revisit this later in the term &mdash; see how your rings grow.</p>
-    </div>
-  </div>
-</section>
-
-<!-- ============ SECTION 5: DISCUSSION ============ -->
-<section class="wrap" id="discuss">
-  <div class="eyebrow">Part 5 &middot; Bring It to Discussion</div>
-  <h2>For the Canvas Board</h2>
-  <ol class="discuss-list">
-    <li>Look back at your <strong>Sort the Trait</strong> answers &mdash; which one did you disagree with, and why? What would you argue instead?</li>
-    <li>Can a machine ever be wise, or only intelligent? What would it need to gain in order to earn that word?</li>
-    <li>Think of the wisest person you know personally. What do they do differently than someone who's just "smart"?</li>
-    <li>Which quality on your Wisdom Compass do you most want to grow this year, and what's one small way you could practice it?</li>
-  </ol>
-  <p style="font-style:italic; color:var(--ink-soft);">Reply prompt: respond to at least one classmate &mdash; do you see wisdom the same way they do?</p>
-
-  <div class="notes-box">
-    <label for="notes" style="font-weight:600; color:var(--teal); display:block; margin-bottom:10px;">Jot your notes here before you post:</label>
-    <textarea id="notes" placeholder="Type your thoughts here, then copy them into your Canvas post..."></textarea>
-    <div class="copy-row">
-      <button class="copy-btn" onclick="copyNotes()">Copy My Notes</button>
-      <span class="copied-msg" id="copiedMsg">Copied!</span>
     </div>
   </div>
 </section>
@@ -374,25 +332,32 @@
   const scenarios = [
     {
       text: "A student memorizes every date in the textbook and aces the test, but freezes the moment a question asks them to apply what they learned to a brand-new situation.",
+      correct: "smart",
       frame: "This shows knowledge without flexibility. Being able to recall facts perfectly is a form of intelligence &mdash; but adapting that knowledge to something new is a different skill, and neither one is really \"wisdom\" yet."
     },
     {
       text: "A CEO automates a task, hitting the profit target exactly as planned, without considering how it will affect the town the factory anchors.",
+      correct: "smart",
       frame: "Technically smart execution, missing broader judgment. Wisdom would have asked \"what are we not accounting for?\" before optimizing for a single number."
     },
     {
       text: "A doctor pauses a fast-moving treatment plan to ask the patient what matters most to them, even though it takes longer.",
+      correct: "wise",
       frame: "This is wisdom in action: weighing more than one value (speed vs. the patient's own priorities) and choosing consciously, even at a cost."
     },
     {
       text: "A player finds a technically legal move that ruins the game for everyone else, and uses it anyway because \"the rules allow it.\"",
+      correct: "smart",
       frame: "Clever within the letter of the rules, but missing the spirit of them. That gap between what's allowed and what's right is exactly where wisdom lives."
     },
     {
       text: "An elder says \"I've seen this happen before\" and suggests a slower, less exciting path &mdash; which turns out to prevent a disaster.",
+      correct: "wise",
       frame: "This is wisdom drawn straight from experience: pattern recognition across a whole life, applied with judgment about what matters most right now."
     }
   ];
+  let scenarioScore = 0;
+  const scenarioVerdictLabel = { smart: "Smart, Not Wise", wise: "Wise" };
 
   function renderScenarios(){
     const list = document.getElementById('scenarioList');
@@ -411,11 +376,18 @@
       const buttons = card.querySelectorAll('.sc-btn');
       buttons.forEach(btn => {
         btn.addEventListener('click', () => {
+          const isCorrect = btn.dataset.v === s.correct;
+          if (isCorrect) {
+            scenarioScore++;
+            document.getElementById('scenarioScore').textContent = scenarioScore + ' / ' + scenarios.length;
+          }
           buttons.forEach(b => b.disabled = true);
           const reveal = document.getElementById('sc-reveal-' + i);
-          reveal.classList.add('show');
+          reveal.className = 'sc-reveal show ' + (isCorrect ? 'sc-correct' : 'sc-incorrect');
           reveal.innerHTML = `
-            <div class="your-pick">You said: ${btn.textContent}</div>
+            <div class="your-pick">${isCorrect ? '\u2713 You matched our framing' : '\u2192 We\u2019d frame this differently'}
+              <span class="pill ${s.correct}">${scenarioVerdictLabel[s.correct]}</span>
+            </div>
             <div>${s.frame}</div>
           `;
         });
@@ -523,24 +495,6 @@
       dot.setAttribute('cx', points[i][0]);
       dot.setAttribute('cy', points[i][1]);
     });
-  }
-
-  // ============ COPY NOTES ============
-  async function copyNotes(){
-    const text = document.getElementById('notes').value;
-    const msg = document.getElementById('copiedMsg');
-    const showMsg = () => { msg.classList.add('show'); setTimeout(() => msg.classList.remove('show'), 1600); };
-    try {
-      await navigator.clipboard.writeText(text);
-      showMsg();
-    } catch (err) {
-      try {
-        const ta = document.getElementById('notes');
-        ta.select();
-        document.execCommand('copy');
-        showMsg();
-      } catch (err2) { /* silently ignore if copy isn't available */ }
-    }
   }
 
   // ============ INIT ============
