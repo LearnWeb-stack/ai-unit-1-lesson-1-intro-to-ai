@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Beyond Intelligence: A Wisdom Activity</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #F7F8FC;
+    --bg-dark: #0F2A4A;
+    --bg-dark-2: #183B61;
+    --ink: #1B1F3B;
+    --ink-soft: #5B6178;
+    --teal: #0F2A4A;
+    --teal-line: rgba(15,42,74,0.18);
+    --gold: #6C5CE7;
+    --gold-deep: #6C5CE7;
+    --clay: #6C5CE7;
+    --sage: #0C8577;
+    --automation: #5B6178;
+    --card: #FFFFFF;
+    --line: #E4E6F5;
+    --shadow: 0 10px 30px rgba(27,31,59,0.12);
+  }
+  *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
+  body{
+    margin:0; background: var(--bg); color: var(--ink);
+    font-family: 'Inter', sans-serif; line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1,h2,h3{ font-family: 'Fraunces', serif; font-weight: 600; margin: 0 0 0.4em; color: var(--teal); }
+  p{ margin: 0 0 1em; }
+  .wrap{ max-width: 880px; margin: 0 auto; padding: 0 28px; }
+  section{ padding: 88px 0; }
+  .eyebrow{
+    font-size: 12.5px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--gold-deep); margin-bottom: 14px; display:flex; align-items:center; gap:10px;
+  }
+  .eyebrow::before{ content:""; width:22px; height:1px; background: var(--gold-deep); display:inline-block; }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    background: radial-gradient(ellipse at 50% -10%, var(--bg-dark-2), var(--bg-dark) 65%);
+    color: #F7F8FC; padding: 0; position: relative; overflow: hidden;
+    min-height: 92vh; display:flex; align-items:center;
+  }
+  .hero-rings{
+    position:absolute; top:50%; left:50%; transform: translate(-50%,-50%);
+    width: 1100px; height: 1100px; pointer-events:none;
+  }
+  .hero-rings circle{ fill:none; stroke: rgba(0,217,192,0.16); }
+  .hero-inner{ position:relative; z-index:2; padding: 60px 28px; max-width: 780px; margin:0 auto; text-align:center; }
+  .hero .eyebrow{ justify-content:center; color: #00D9C0; }
+  .hero .eyebrow::before{ background: #00D9C0; }
+  .hero h1{ color:#FFFFFF; font-size: clamp(2.4rem, 5.6vw, 4rem); line-height: 1.06; letter-spacing: -0.01em; margin-bottom: 22px; }
+  .hero h1 em{ font-style: italic; color: #00D9C0; }
+  .hero p.sub{ color:#AFB4D4; font-size: 1.15rem; max-width: 560px; margin: 0 auto 34px; }
+  .scroll-cue{ display:inline-flex; flex-direction:column; align-items:center; gap:8px; color:#8A8EC0; font-size:12.5px; letter-spacing:0.08em; text-transform:uppercase; }
+  .scroll-cue .arrow{ width:1px; height:34px; background: linear-gradient(#8A8EC0, transparent); position:relative; animation: pulse 2s ease-in-out infinite; }
+  @keyframes pulse{ 0%,100%{ opacity:0.4; } 50%{ opacity:1; } }
+
+  /* ---------- SECTION 1: definitions ---------- */
+  .definitions{ display:grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-top: 36px; }
+  @media (max-width: 700px){ .definitions{ grid-template-columns: 1fr; } }
+  .def-card{ background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 30px 28px; box-shadow: var(--shadow); }
+  .def-card .tag{ display:inline-block; font-size:11.5px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; padding: 5px 11px; border-radius: 999px; margin-bottom: 14px; }
+  .def-card.intel .tag{ background: rgba(12,133,119,0.15); color: var(--sage); }
+  .def-card.wise .tag{ background: rgba(108,92,231,0.15); color: var(--gold-deep); }
+  .def-card h3{ font-size: 1.3rem; margin-bottom: 10px; }
+  .def-card p{ color: var(--ink-soft); font-size: 0.98rem; margin-bottom: 0; }
+  .riff{ margin-top: 28px; padding: 20px 24px; border-left: 3px solid var(--gold); background: rgba(108,92,231,0.07); border-radius: 4px; font-family:'Fraunces',serif; font-style: italic; font-size: 1.08rem; color: var(--teal); }
+
+  /* ---------- SORT ACTIVITY ---------- */
+  .score-bar{
+    display:flex; align-items:center; justify-content:space-between; gap: 16px;
+    background: var(--teal); color: #F7F8FC; border-radius: 12px; padding: 16px 22px; margin: 30px 0 26px;
+    font-size: 0.95rem;
+  }
+  .score-bar strong{ font-size: 1.2rem; color: #00D9C0; font-family:'Fraunces',serif; }
+  .trait-grid{ display:grid; grid-template-columns: 1fr; gap: 16px; }
+  .trait-card{ background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 22px 24px; box-shadow: var(--shadow); }
+  .trait-text{ font-size: 1.04rem; margin-bottom: 16px; color: var(--ink); }
+  .choice-row{ display:flex; flex-wrap: wrap; gap: 10px; }
+  .choice-btn{
+    font-family:'Inter',sans-serif; font-size: 0.86rem; font-weight: 600; letter-spacing: 0.01em;
+    padding: 9px 15px; border-radius: 999px; border: 1.5px solid var(--teal-line); background: #fff;
+    color: var(--teal); cursor: pointer; transition: all 0.15s ease;
+  }
+  .choice-btn:hover{ border-color: var(--teal); background: rgba(15,42,74,0.06); }
+  .choice-btn:disabled{ cursor: default; opacity: 0.5; }
+  .result{ margin-top: 16px; padding: 16px 18px; border-radius: 10px; font-size: 0.95rem; display:none; }
+  .result.show{ display:block; }
+  .result .verdict{ font-weight: 700; margin-bottom: 6px; display:flex; align-items:center; gap: 8px; }
+  .result.correct{ background: rgba(12,133,119,0.12); }
+  .result.incorrect{ background: rgba(91,97,120,0.12); }
+  .pill{ display:inline-block; font-size:11px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; padding: 3px 10px; border-radius: 999px; color:#fff; }
+  .pill.ai{ background: var(--clay); }
+  .pill.human{ background: var(--sage); }
+  .pill.wisdom{ background: #2F5D8A; }
+  .pill.automation{ background: var(--automation); }
+
+  /* ---------- SCENARIO JUDGE ---------- */
+  .scenario-card{ background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 24px 26px; box-shadow: var(--shadow); margin-bottom: 16px; }
+  .scenario-text{ font-size: 1.02rem; margin-bottom: 16px; }
+  .scenario-choices{ display:flex; gap: 10px; flex-wrap: wrap; }
+  .sc-btn{
+    font-family:'Inter',sans-serif; font-weight:600; font-size: 0.9rem; padding: 10px 18px; border-radius: 999px;
+    border: 1.5px solid var(--teal-line); background:#fff; color: var(--teal); cursor:pointer;
+  }
+  .sc-btn:hover{ background: rgba(15,42,74,0.06); border-color: var(--teal); }
+  .sc-btn:disabled{ opacity:0.5; cursor:default; }
+  .sc-reveal{ margin-top: 16px; padding: 16px 18px; border-radius: 10px; background: rgba(108,92,231,0.08); font-size: 0.95rem; display:none; }
+  .sc-reveal.show{ display:block; }
+  .sc-reveal .your-pick{ font-weight:700; color: var(--teal); margin-bottom: 6px; }
+
+  /* ---------- WISDOM COMPASS ---------- */
+  .compass-wrap{ display:grid; grid-template-columns: 1fr 300px; gap: 40px; align-items:center; margin-top: 30px; }
+  @media (max-width: 760px){ .compass-wrap{ grid-template-columns: 1fr; } }
+  .slider-group{ margin-bottom: 22px; }
+  .slider-group label{ display:flex; justify-content:space-between; font-weight:600; font-size:0.94rem; margin-bottom: 8px; color: var(--teal); }
+  .slider-group .val{ color: var(--gold-deep); font-family:'Fraunces',serif; font-weight:700; }
+  .slider-group input[type=range]{
+    width: 100%; -webkit-appearance:none; height: 6px; border-radius: 4px; background: var(--teal-line); outline:none;
+  }
+  .slider-group input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none; width:18px; height:18px; border-radius:50%; background: var(--gold);
+    border: 2px solid #fff; box-shadow: 0 1px 4px rgba(0,0,0,0.25); cursor:pointer;
+  }
+  .slider-group input[type=range]::-moz-range-thumb{
+    width:18px; height:18px; border-radius:50%; background: var(--gold); border: 2px solid #fff; cursor:pointer;
+  }
+  .slider-group .hint{ font-size: 0.82rem; color: var(--ink-soft); font-weight:400; }
+  .compass-chart{ display:flex; justify-content:center; }
+  .compass-note{ text-align:center; font-size: 0.88rem; color: var(--ink-soft); margin-top: 14px; font-style: italic; }
+
+  /* ---------- DISCUSSION ---------- */
+  .discuss-list{ list-style:none; margin: 28px 0; padding: 0; counter-reset: dq; }
+  .discuss-list li{
+    counter-increment: dq; position:relative; padding: 18px 0 18px 46px; border-bottom: 1px solid var(--line);
+    font-size: 1.02rem;
+  }
+  .discuss-list li:last-child{ border-bottom:none; }
+  .discuss-list li::before{
+    content: counter(dq); position:absolute; left:0; top:18px; width:30px; height:30px; border-radius:50%;
+    background: var(--teal); color:#00D9C0; font-family:'Fraunces',serif; font-weight:700; font-size:0.95rem;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .notes-box{ margin-top: 30px; }
+  .notes-box textarea{
+    width:100%; min-height: 130px; border-radius: 12px; border: 1.5px solid var(--teal-line);
+    padding: 16px 18px; font-family:'Inter',sans-serif; font-size: 0.96rem; color: var(--ink);
+    background: var(--card); resize: vertical;
+  }
+  .notes-box textarea:focus{ outline: 2px solid var(--gold); outline-offset: 2px; }
+  .copy-row{ display:flex; align-items:center; gap: 14px; margin-top: 12px; }
+  .copy-btn{
+    font-family:'Inter',sans-serif; font-weight:600; font-size:0.9rem; padding: 10px 20px; border-radius: 999px;
+    border: none; background: var(--teal); color:#F7F8FC; cursor:pointer;
+  }
+  .copy-btn:hover{ background: var(--bg-dark-2); }
+  .copied-msg{ font-size: 0.85rem; color: var(--sage); font-weight:600; opacity:0; transition: opacity 0.2s; }
+  .copied-msg.show{ opacity:1; }
+
+  footer{ text-align:center; padding: 40px 28px 60px; color: var(--ink-soft); font-size: 0.85rem; }
+
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+    .scroll-cue .arrow{ animation:none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <svg class="hero-rings" viewBox="0 0 1100 1100" aria-hidden="true">
+    <circle cx="550" cy="550" r="120"></circle>
+    <circle cx="550" cy="550" r="220"></circle>
+    <circle cx="550" cy="550" r="320"></circle>
+    <circle cx="550" cy="550" r="420"></circle>
+    <circle cx="550" cy="550" r="520"></circle>
+  </svg>
+  <div class="hero-inner">
+    <div class="eyebrow">A Companion Activity &middot; Unit 2, Lesson 1</div>
+    <h1>Machines can be <em>intelligent</em>.<br>Only people can be <em>wise</em>.</h1>
+    <p class="sub">You've explored what makes a system intelligent. Now turn the lens on yourself: what's the difference between being smart and being wise &mdash; and where do you actually stand?</p>
+    <div class="scroll-cue"><span>Scroll to begin</span><span class="arrow"></span></div>
+  </div>
+</section>
+
+<!-- ============ SECTION 1: DEFINITIONS ============ -->
+<section class="wrap" id="definitions">
+  <div class="eyebrow">Part 1</div>
+  <h2>Two Kinds of Smart</h2>
+  <p>Intelligence and wisdom get used as if they're the same thing. They're not &mdash; and the difference matters more than ever now that machines have gotten so good at the first one.</p>
+  <div class="definitions">
+    <div class="def-card intel">
+      <span class="tag">Intelligence</span>
+      <h3>The capacity to learn and reason</h3>
+      <p>The ability to acquire knowledge, recognize patterns, solve problems, and apply skills across new situations. Humans show this in many forms &mdash; analytical, creative, social, emotional &mdash; not just one narrow task at a time, the way most AI does.</p>
+    </div>
+    <div class="def-card wise">
+      <span class="tag">Wisdom</span>
+      <h3>Knowing how &mdash; and whether &mdash; to use it</h3>
+      <p>Sound judgment shaped by experience, values, and self-awareness. Wisdom isn't about knowing more facts; it's knowing what actually matters here, what the consequences are, and when to act, wait, or hold back entirely.</p>
+    </div>
+  </div>
+  <p class="riff">Intelligence notices that a tomato is technically a fruit. Wisdom knows to keep it out of the fruit salad anyway.</p>
+</section>
+
+<!-- ============ SECTION 2: SORT THE TRAIT ============ -->
+<section class="wrap" id="sort">
+  <div class="eyebrow">Part 2 &middot; Interactive</div>
+  <h2>Sort the Trait</h2>
+  <p>Read each behavior below. Decide which bucket it really belongs in &mdash; then click to see how we'd classify it and why. There's room to disagree; that's the point.</p>
+
+  <div class="score-bar">
+    <span>Your classifications</span>
+    <span><strong id="scoreDisplay">0 / 10</strong> matched our take</span>
+  </div>
+
+  <div class="trait-grid" id="traitGrid"></div>
+</section>
+
+<!-- ============ SECTION 3: JUDGE THE SCENARIO ============ -->
+<section class="wrap" id="judge">
+  <div class="eyebrow">Part 3 &middot; Interactive</div>
+  <h2>Smart, or Wise?</h2>
+  <p>These five short scenarios all involve someone using their intelligence. Decide: are they being <em>smart</em>, or <em>wise</em>? Pick one, then see how we'd frame it.</p>
+  <div id="scenarioList"></div>
+</section>
+
+<!-- ============ SECTION 4: WISDOM COMPASS ============ -->
+<section class="wrap" id="compass">
+  <div class="eyebrow">Part 4 &middot; Self-Reflection</div>
+  <h2>Your Wisdom Compass</h2>
+  <p>This isn't a test, and there's no score to submit &mdash; wisdom isn't fixed, and it grows with experience. Move each slider to reflect where you honestly are <em>right now</em>, and watch your compass take shape.</p>
+
+  <div class="compass-wrap">
+    <div class="sliders" id="sliderGroup"></div>
+    <div>
+      <div class="compass-chart">
+        <svg id="radarChart" width="280" height="280" viewBox="0 0 280 280"></svg>
+      </div>
+      <p class="compass-note">Revisit this later in the term &mdash; see how your rings grow.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 5: DISCUSSION ============ -->
+<section class="wrap" id="discuss">
+  <div class="eyebrow">Part 5 &middot; Bring It to Discussion</div>
+  <h2>For the Canvas Board</h2>
+  <ol class="discuss-list">
+    <li>Look back at your <strong>Sort the Trait</strong> answers &mdash; which one did you disagree with, and why? What would you argue instead?</li>
+    <li>Can a machine ever be wise, or only intelligent? What would it need to gain in order to earn that word?</li>
+    <li>Think of the wisest person you know personally. What do they do differently than someone who's just "smart"?</li>
+    <li>Which quality on your Wisdom Compass do you most want to grow this year, and what's one small way you could practice it?</li>
+  </ol>
+  <p style="font-style:italic; color:var(--ink-soft);">Reply prompt: respond to at least one classmate &mdash; do you see wisdom the same way they do?</p>
+
+  <div class="notes-box">
+    <label for="notes" style="font-weight:600; color:var(--teal); display:block; margin-bottom:10px;">Jot your notes here before you post:</label>
+    <textarea id="notes" placeholder="Type your thoughts here, then copy them into your Canvas post..."></textarea>
+    <div class="copy-row">
+      <button class="copy-btn" onclick="copyNotes()">Copy My Notes</button>
+      <span class="copied-msg" id="copiedMsg">Copied!</span>
+    </div>
+  </div>
+</section>
+
+<footer>Unit 2, Lesson 1 &middot; Introduction to Artificial Intelligence &mdash; Human Intelligence &amp; Wisdom Activity<br>Created by Sukhdeep Kaur, Artificial Intelligence Instructor</footer>
+
+<script>
+  // ============ SORT THE TRAIT DATA ============
+  const traits = [
+    {
+      text: "Instantly recalling millions of facts with zero errors, on demand.",
+      correct: "ai",
+      explain: "Perfect, tireless recall at massive scale is a machine strength. Humans forget on purpose sometimes &mdash; and that's not always a flaw."
+    },
+    {
+      text: "Noticing a friend is upset before they've said a single word.",
+      correct: "human",
+      explain: "Reading subtle emotional and social cues is a hallmark of human intelligence &mdash; it draws on context AI systems usually don't have access to."
+    },
+    {
+      text: "Biting your tongue instead of winning an argument you don't actually need to win.",
+      correct: "wisdom",
+      explain: "This is restraint in service of a bigger goal (the relationship, the moment) over a smaller one (being right). That trade-off is the essence of wisdom."
+    },
+    {
+      text: "Spotting one specific cat in ten million photos in under a second.",
+      correct: "ai",
+      explain: "Large-scale pattern recognition across huge datasets, fast, is exactly what modern computer vision is built for."
+    },
+    {
+      text: "Running the exact same steps, in the exact same order, every single time, forever.",
+      correct: "automation",
+      explain: "No learning, no adapting, no judgment &mdash; just a fixed rule repeating. That's automation, not intelligence of any kind."
+    },
+    {
+      text: "Changing your whole plan on the fly when the situation shifts in a way nobody predicted.",
+      correct: "human",
+      explain: "Flexible reasoning across totally unfamiliar situations is broad, general intelligence &mdash; still a struggle for most narrow AI systems."
+    },
+    {
+      text: "Saying \"I don't know\" instead of guessing with false confidence.",
+      correct: "wisdom",
+      explain: "Intellectual humility &mdash; knowing the limits of what you actually know &mdash; is a judgment call, not a knowledge problem."
+    },
+    {
+      text: "Writing an entirely new short story from a single one-line prompt.",
+      correct: "ai",
+      explain: "This is generative AI's signature move. (Worth arguing about: humans do this too, through imagination &mdash; is it the same kind of \"new\"?)"
+    },
+    {
+      text: "Forgiving someone even though you don't owe them forgiveness.",
+      correct: "wisdom",
+      explain: "This is a values-driven choice, not a utility calculation. It's hard to imagine an optimization function that arrives here on its own."
+    },
+    {
+      text: "Calculating a rocket's trajectory to the decimal point.",
+      correct: "ai",
+      explain: "Precise, high-speed computation over well-defined variables is squarely a machine's home turf."
+    }
+  ];
+
+  const bucketLabel = { ai: "Artificial Intelligence", human: "Human Intelligence", wisdom: "Wisdom", automation: "Just Automation" };
+  let score = 0;
+
+  function renderTraits(){
+    const grid = document.getElementById('traitGrid');
+    traits.forEach((t, i) => {
+      const card = document.createElement('div');
+      card.className = 'trait-card';
+      card.innerHTML = `
+        <div class="trait-text">${t.text}</div>
+        <div class="choice-row" id="choices-${i}">
+          <button class="choice-btn" data-v="ai">Artificial Intelligence</button>
+          <button class="choice-btn" data-v="human">Human Intelligence</button>
+          <button class="choice-btn" data-v="wisdom">Wisdom</button>
+          <button class="choice-btn" data-v="automation">Just Automation</button>
+        </div>
+        <div class="result" id="result-${i}"></div>
+      `;
+      grid.appendChild(card);
+      const buttons = card.querySelectorAll('.choice-btn');
+      buttons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const picked = btn.dataset.v;
+          const isCorrect = picked === t.correct;
+          if (isCorrect) score++;
+          document.getElementById('scoreDisplay').textContent = score + ' / ' + traits.length;
+          buttons.forEach(b => b.disabled = true);
+          const resultEl = document.getElementById('result-' + i);
+          resultEl.className = 'result show ' + (isCorrect ? 'correct' : 'incorrect');
+          resultEl.innerHTML = `
+            <div class="verdict">${isCorrect ? '\u2713 You matched our take' : '\u2192 We\u2019d classify this differently'}
+              <span class="pill ${t.correct}">${bucketLabel[t.correct]}</span>
+            </div>
+            <div>${t.explain}</div>
+          `;
+        });
+      });
+    });
+  }
+
+  // ============ SMART OR WISE? DATA ============
+  const scenarios = [
+    {
+      text: "A student memorizes every date in the textbook and aces the test, but freezes the moment a question asks them to apply what they learned to a brand-new situation.",
+      frame: "This shows knowledge without flexibility. Being able to recall facts perfectly is a form of intelligence &mdash; but adapting that knowledge to something new is a different skill, and neither one is really \"wisdom\" yet."
+    },
+    {
+      text: "A CEO automates a task, hitting the profit target exactly as planned, without considering how it will affect the town the factory anchors.",
+      frame: "Technically smart execution, missing broader judgment. Wisdom would have asked \"what are we not accounting for?\" before optimizing for a single number."
+    },
+    {
+      text: "A doctor pauses a fast-moving treatment plan to ask the patient what matters most to them, even though it takes longer.",
+      frame: "This is wisdom in action: weighing more than one value (speed vs. the patient's own priorities) and choosing consciously, even at a cost."
+    },
+    {
+      text: "A player finds a technically legal move that ruins the game for everyone else, and uses it anyway because \"the rules allow it.\"",
+      frame: "Clever within the letter of the rules, but missing the spirit of them. That gap between what's allowed and what's right is exactly where wisdom lives."
+    },
+    {
+      text: "An elder says \"I've seen this happen before\" and suggests a slower, less exciting path &mdash; which turns out to prevent a disaster.",
+      frame: "This is wisdom drawn straight from experience: pattern recognition across a whole life, applied with judgment about what matters most right now."
+    }
+  ];
+
+  function renderScenarios(){
+    const list = document.getElementById('scenarioList');
+    scenarios.forEach((s, i) => {
+      const card = document.createElement('div');
+      card.className = 'scenario-card';
+      card.innerHTML = `
+        <div class="scenario-text">${s.text}</div>
+        <div class="scenario-choices" id="sc-choices-${i}">
+          <button class="sc-btn" data-v="smart">Smart, Not Wise</button>
+          <button class="sc-btn" data-v="wise">Wise</button>
+        </div>
+        <div class="sc-reveal" id="sc-reveal-${i}"></div>
+      `;
+      list.appendChild(card);
+      const buttons = card.querySelectorAll('.sc-btn');
+      buttons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          buttons.forEach(b => b.disabled = true);
+          const reveal = document.getElementById('sc-reveal-' + i);
+          reveal.classList.add('show');
+          reveal.innerHTML = `
+            <div class="your-pick">You said: ${btn.textContent}</div>
+            <div>${s.frame}</div>
+          `;
+        });
+      });
+    });
+  }
+
+  // ============ WISDOM COMPASS ============
+  const axes = [
+    { key: 'patience', label: 'Patience', hint: 'Waiting for the right moment instead of rushing' },
+    { key: 'humility', label: 'Humility', hint: 'Comfortable saying \u201cI don\u2019t know\u201d or \u201cI was wrong\u201d' },
+    { key: 'perspective', label: 'Perspective', hint: 'Considering how a choice affects other people' },
+    { key: 'judgment', label: 'Judgment', hint: 'Weighing competing values, not just the facts' },
+    { key: 'awareness', label: 'Self-Awareness', hint: 'Noticing your own emotions and blind spots' },
+  ];
+  const values = { patience: 3, humility: 3, perspective: 3, judgment: 3, awareness: 3 };
+
+  function renderSliders(){
+    const group = document.getElementById('sliderGroup');
+    axes.forEach(a => {
+      const wrap = document.createElement('div');
+      wrap.className = 'slider-group';
+      wrap.innerHTML = `
+        <label>${a.label} <span class="val" id="val-${a.key}">${values[a.key]}</span></label>
+        <input type="range" min="1" max="5" step="1" value="${values[a.key]}" id="slider-${a.key}">
+        <div class="hint">${a.hint}</div>
+      `;
+      group.appendChild(wrap);
+      wrap.querySelector('input').addEventListener('input', (e) => {
+        values[a.key] = parseInt(e.target.value, 10);
+        document.getElementById('val-' + a.key).textContent = values[a.key];
+        updateChart();
+      });
+    });
+  }
+
+  const svgNS = "http://www.w3.org/2000/svg";
+  const cx = 140, cy = 140, maxR = 105;
+  function axisPoint(index, radiusFraction){
+    const angle = -Math.PI/2 + index * (2*Math.PI/axes.length);
+    const r = radiusFraction * maxR;
+    return [ cx + r*Math.cos(angle), cy + r*Math.sin(angle) ];
+  }
+
+  function buildChartSkeleton(){
+    const svg = document.getElementById('radarChart');
+    // background rings (the recurring "growth ring" motif)
+    for (let ring = 1; ring <= 5; ring++){
+      const circle = document.createElementNS(svgNS, 'circle');
+      circle.setAttribute('cx', cx); circle.setAttribute('cy', cy);
+      circle.setAttribute('r', (ring/5) * maxR);
+      circle.setAttribute('fill', 'none');
+      circle.setAttribute('stroke', 'rgba(15,42,74,0.16)');
+      circle.setAttribute('stroke-width', ring === 5 ? 1.4 : 0.8);
+      svg.appendChild(circle);
+    }
+    // axis lines + labels
+    axes.forEach((a, i) => {
+      const [x, y] = axisPoint(i, 1);
+      const line = document.createElementNS(svgNS, 'line');
+      line.setAttribute('x1', cx); line.setAttribute('y1', cy);
+      line.setAttribute('x2', x); line.setAttribute('y2', y);
+      line.setAttribute('stroke', 'rgba(15,42,74,0.2)'); line.setAttribute('stroke-width', 0.8);
+      svg.appendChild(line);
+
+      const [lx, ly] = axisPoint(i, 1.22);
+      const text = document.createElementNS(svgNS, 'text');
+      text.setAttribute('x', lx); text.setAttribute('y', ly);
+      text.setAttribute('text-anchor', 'middle');
+      text.setAttribute('dominant-baseline', 'middle');
+      text.setAttribute('font-size', '9.5');
+      text.setAttribute('font-family', 'Inter, sans-serif');
+      text.setAttribute('font-weight', '600');
+      text.setAttribute('fill', '#0F2A4A');
+      text.textContent = a.label;
+      svg.appendChild(text);
+    });
+    // data polygon (created once, updated on input)
+    const poly = document.createElementNS(svgNS, 'polygon');
+    poly.setAttribute('id', 'dataPolygon');
+    poly.setAttribute('fill', 'rgba(108,92,231,0.28)');
+    poly.setAttribute('stroke', '#6C5CE7');
+    poly.setAttribute('stroke-width', 2);
+    poly.setAttribute('stroke-linejoin', 'round');
+    svg.appendChild(poly);
+
+    // vertex dots
+    axes.forEach((a, i) => {
+      const dot = document.createElementNS(svgNS, 'circle');
+      dot.setAttribute('id', 'dot-' + a.key);
+      dot.setAttribute('r', 4);
+      dot.setAttribute('fill', '#6C5CE7');
+      dot.setAttribute('stroke', '#FFFFFF');
+      dot.setAttribute('stroke-width', 1.5);
+      svg.appendChild(dot);
+    });
+  }
+
+  function updateChart(){
+    const points = axes.map((a, i) => axisPoint(i, values[a.key] / 5));
+    const poly = document.getElementById('dataPolygon');
+    poly.setAttribute('points', points.map(p => p.join(',')).join(' '));
+    axes.forEach((a, i) => {
+      const dot = document.getElementById('dot-' + a.key);
+      dot.setAttribute('cx', points[i][0]);
+      dot.setAttribute('cy', points[i][1]);
+    });
+  }
+
+  // ============ COPY NOTES ============
+  async function copyNotes(){
+    const text = document.getElementById('notes').value;
+    const msg = document.getElementById('copiedMsg');
+    const showMsg = () => { msg.classList.add('show'); setTimeout(() => msg.classList.remove('show'), 1600); };
+    try {
+      await navigator.clipboard.writeText(text);
+      showMsg();
+    } catch (err) {
+      try {
+        const ta = document.getElementById('notes');
+        ta.select();
+        document.execCommand('copy');
+        showMsg();
+      } catch (err2) { /* silently ignore if copy isn't available */ }
+    }
+  }
+
+  // ============ INIT ============
+  renderTraits();
+  renderScenarios();
+  renderSliders();
+  buildChartSkeleton();
+  updateChart();
+</script>
+</body>
+</html>
